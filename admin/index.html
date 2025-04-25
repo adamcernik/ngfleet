@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - NG Fleet</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <style>
+        .admin-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .users-table th, 
+        .users-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .users-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        
+        .users-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-delete:hover {
+            opacity: 0.9;
+        }
+        
+        .login-section {
+            max-width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .confirmation-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-cancel {
+            background-color: #999;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        #loadingSpinner {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .version {
+            font-size: 0.75rem;
+            color: #777;
+            margin-left: 8px;
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .no-users-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">NG Fleet</a>
+                <span class="version">v1.0.1</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Zpět na web</a></li>
+                    <li><a href="#" id="logoutButton" style="display: none;">Odhlásit se</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div id="loginSection" class="login-section admin-card">
+            <h2>Přihlášení do administrace</h2>
+            <p>Pro přístup k administraci je vyžadováno přihlášení</p>
+            <button id="loginButton" class="btn btn-primary">Přihlásit se</button>
+        </div>
+        
+        <div id="adminSection" style="display: none;">
+            <div class="admin-container">
+                <div class="admin-card">
+                    <h2>Správa uživatelů</h2>
+                    <p>Přehled registrovaných uživatelů v systému</p>
+                    
+                    <div id="loadingSpinner">
+                        <div class="spinner"></div>
+                        <p>Načítání uživatelů...</p>
+                    </div>
+                    
+                    <div id="usersTableContainer">
+                        <table class="users-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Jméno</th>
+                                    <th>Email</th>
+                                    <th>Telefon</th>
+                                    <th>Město</th>
+                                    <th>Role</th>
+                                    <th>Datum registrace</th>
+                                    <th>Akce</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- User data will be inserted here -->
+                            </tbody>
+                        </table>
+                        <div id="noUsersMessage" class="no-users-message" style="display: none;">
+                            <p>Žádní uživatelé nebyli nalezeni.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-content">
+            <h3>Potvrdit smazání</h3>
+            <p>Opravdu chcete smazat tohoto uživatele? Tato akce je nevratná.</p>
+            <div class="confirmation-buttons">
+                <button id="confirmDelete" class="btn-delete">Smazat</button>
+                <button id="cancelDelete" class="btn-cancel">Zrušit</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 NG Fleet. Všechna práva vyhrazena.</p>
+        </div>
+    </footer>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCy-N3WwYTIvbUFGg1qhhb8S-3Eye5FQa0",
+            authDomain: "ngfleet-d675c.firebaseapp.com",
+            projectId: "ngfleet-d675c",
+            storageBucket: "ngfleet-d675c.firebasestorage.app",
+            messagingSenderId: "119274710610",
+            appId: "1:119274710610:web:cba6c4e29628c4746d618b",
+            measurementId: "G-FY161TT086"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // DOM elements
+        const loginSection = document.getElementById('loginSection');
+        const adminSection = document.getElementById('adminSection');
+        const loginButton = document.getElementById('loginButton');
+        const logoutButton = document.getElementById('logoutButton');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const noUsersMessage = document.getElementById('noUsersMessage');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        
+        let currentUserToDelete = null;
+        
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Check if user has admin rights (in production, use Firebase security rules for this)
+                // For demo purposes we'll just check if the user is authenticated
+                loginSection.style.display = 'none';
+                adminSection.style.display = 'block';
+                logoutButton.style.display = 'block';
+                loadUsers();
+            } else {
+                loginSection.style.display = 'block';
+                adminSection.style.display = 'none';
+                logoutButton.style.display = 'none';
+            }
+        });
+        
+        // Login functionality
+        loginButton.addEventListener('click', async () => {
+            try {
+                const provider = new GoogleAuthProvider();
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("Error during authentication:", error);
+                alert("Přihlášení se nezdařilo: " + error.message);
+            }
+        });
+        
+        // Logout functionality
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Error during logout:", error);
+            }
+        });
+        
+        // Load users from Firestore
+        async function loadUsers() {
+            try {
+                loadingSpinner.style.display = 'block';
+                usersTableBody.innerHTML = '';
+                noUsersMessage.style.display = 'none';
+                
+                const registrationsRef = collection(db, "registrations");
+                const querySnapshot = await getDocs(registrationsRef);
+                
+                if (querySnapshot.empty) {
+                    noUsersMessage.style.display = 'block';
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const userData = doc.data();
+                        const row = document.createElement('tr');
+                        
+                        // Format timestamp if it exists
+                        let formattedDate = 'Neuvedeno';
+                        if (userData.timestamp) {
+                            const timestamp = userData.timestamp instanceof Timestamp 
+                                ? userData.timestamp.toDate() 
+                                : new Date(userData.timestamp);
+                            formattedDate = timestamp.toLocaleString('cs-CZ');
+                        }
+                        
+                        row.innerHTML = `
+                            <td>${userData.name || 'Neuvedeno'}</td>
+                            <td>${userData.email || 'Neuvedeno'}</td>
+                            <td>${userData.phone || 'Neuvedeno'}</td>
+                            <td>${userData.city || 'Neuvedeno'}</td>
+                            <td>${userData.role === 'kuryr' ? 'Kurýr' : userData.role === 'ridic' ? 'Řidič' : 'Neuvedeno'}</td>
+                            <td>${formattedDate}</td>
+                            <td><button class="btn-delete" data-id="${doc.id}">Smazat</button></td>
+                        `;
+                        
+                        usersTableBody.appendChild(row);
+                    });
+                    
+                    // Add event listeners to delete buttons
+                    const deleteButtons = document.querySelectorAll('.btn-delete');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            currentUserToDelete = e.target.getAttribute('data-id');
+                            confirmationModal.style.display = 'flex';
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading users:", error);
+                alert("Chyba při načítání uživatelů: " + error.message);
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+        
+        // Delete user functionality
+        confirmDeleteBtn.addEventListener('click', async () => {
+            if (!currentUserToDelete) return;
+            
+            try {
+                await deleteDoc(doc(db, "registrations", currentUserToDelete));
+                confirmationModal.style.display = 'none';
+                loadUsers(); // Reload the users list
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("Chyba při mazání uživatele: " + error.message);
+            }
+        });
+        
+        // Close confirmation modal
+        cancelDeleteBtn.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+            currentUserToDelete = null;
+        });
+    </script>
+</body>
+</html> 
