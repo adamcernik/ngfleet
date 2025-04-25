@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
             saveFormData();
             closeModal(registrationModal);
             openModal(verificationModal);
+        } else {
+            console.log('Form validation failed');
         }
     });
 
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!field.value.trim()) {
                 field.style.borderColor = 'red';
                 isValid = false;
+                console.log(`Field ${field.name} is empty`);
             } else {
                 field.style.borderColor = '#ddd';
             }
@@ -82,14 +85,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (emailField.value && !emailPattern.test(emailField.value)) {
             emailField.style.borderColor = 'red';
             isValid = false;
+            console.log('Email validation failed');
         }
 
-        // Phone validation
+        // Phone validation - better pattern for Czech phone numbers
         const phoneField = document.getElementById('phone');
-        const phonePattern = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
-        if (phoneField.value && !phonePattern.test(phoneField.value)) {
+        // Accept formats like: 123456789, +420123456789, 420 123 456 789, +420 123 456 789, etc.
+        const phonePattern = /^(\+?(420)?)? ?[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/;
+        console.log('Phone value:', phoneField.value);
+        const isPhoneValid = phonePattern.test(phoneField.value);
+        console.log('Phone validation result:', isPhoneValid);
+        
+        if (phoneField.value && !isPhoneValid) {
             phoneField.style.borderColor = 'red';
             isValid = false;
+            console.log('Phone validation failed');
         }
 
         return isValid;
@@ -108,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         localStorage.setItem('ngFleetRegistration', JSON.stringify(formData));
+        console.log('Form data saved:', formData);
         
         // In a real application, we would use Firebase to store this data
         /*
