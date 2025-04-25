@@ -5,9 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const isFirebaseAvailable = window.firebaseDb !== undefined;
     
     if (isFirebaseAvailable) {
-        console.log('Firebase is connected and ready to use');
+        console.log('Firebase is connected and ready to use', window.firebaseDb);
     } else {
-        console.warn('Firebase is not available. Using localStorage for data storage instead.');
+        console.error('Firebase is not available!', window);
+        console.warn('Using localStorage for data storage instead.');
     }
 
     // Modal Elements
@@ -122,30 +123,70 @@ document.addEventListener('DOMContentLoaded', function() {
             phone: document.getElementById('phone').value,
             email: document.getElementById('email').value,
             city: document.getElementById('city').value,
-            message: document.getElementById('message').value,
+            message: document.getElementById('message').value || '',
             timestamp: new Date().toISOString()
         };
+
+        console.log('Form submitted with data:', formData);
 
         // Always save to localStorage as backup
         localStorage.setItem('ngFleetRegistration', JSON.stringify(formData));
         console.log('Form data saved to localStorage:', formData);
         
-        // If Firebase is available, save to Firestore
-        if (isFirebaseAvailable) {
+        // Check if saveToFirebase function is available (our custom helper)
+        if (typeof window.saveToFirebase === 'function') {
+            console.log('Using saveToFirebase helper function');
+            window.saveToFirebase({
+                ...formData,
+                timestamp: new Date() // Firestore will convert this to a timestamp
+            })
+            .then(docId => {
+                console.log("Document saved successfully with ID:", docId);
+                alert("Vaše registrace byla úspěšně uložena!");
+            })
+            .catch(error => {
+                console.error("Error saving to Firebase:", error);
+                alert("Registrace byla uložena lokálně, ale nepodařilo se ji odeslat na server.");
+            });
+        }
+        // Fallback to the old method if saveToFirebase is not available
+        else if (window.firebaseDb) {
+            console.log('Attempting to save to Firebase using old method...');
             try {
-                window.firebaseDb.collection('registrations').add({
-                    ...formData,
-                    timestamp: new Date() // Firestore will convert this to a timestamp
-                })
-                .then((docRef) => {
-                    console.log("Document written to Firebase with ID:", docRef.id);
-                })
-                .catch((error) => {
-                    console.error("Error adding document to Firebase:", error);
-                });
+                const firestoreDb = window.firebaseDb;
+                if (typeof firestoreDb.collection === 'function') {
+                    firestoreDb.collection('registrations').add({
+                        ...formData,
+                        timestamp: new Date()
+                    })
+                    .then((docRef) => {
+                        console.log("Document written to Firebase with ID:", docRef.id);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document to Firebase:", error);
+                    });
+                } else {
+                    console.error("firebaseDb.collection is not a function:", firestoreDb);
+                    
+                    if (window.firebaseCollection && window.firebaseAddDoc) {
+                        console.log("Trying direct Firestore v9 API...");
+                        const registrationsRef = window.firebaseCollection(firestoreDb, "registrations");
+                        window.firebaseAddDoc(registrationsRef, {
+                            ...formData,
+                            timestamp: new Date()
+                        }).then(docRef => {
+                            console.log("Document written with ID (v9 API):", docRef.id);
+                        }).catch(error => {
+                            console.error("Error adding document (v9 API):", error);
+                        });
+                    }
+                }
             } catch (error) {
                 console.error("Error using Firebase:", error);
+                console.error("Error details:", error.stack);
             }
+        } else {
+            console.error("Firebase is not available for saving data!");
         }
     }
 

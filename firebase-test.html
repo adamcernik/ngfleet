@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Test - NG Fleet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #4285f4;
+        }
+        
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #3367d6;
+        }
+        
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .success {
+            color: #34a853;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #ea4335;
+            font-weight: bold;
+        }
+        
+        #logs {
+            height: 200px;
+            overflow-y: auto;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firebase Test Page</h1>
+    
+    <div class="card">
+        <h2>Firebase Configuration</h2>
+        <p>This page tests Firebase connectivity and functionality.</p>
+    </div>
+    
+    <div class="card">
+        <h2>Test Firebase Initialization</h2>
+        <button id="testInit">Test Initialization</button>
+        <div id="initResult"></div>
+    </div>
+    
+    <div class="card">
+        <h2>Test Firestore Write</h2>
+        <button id="testWrite">Test Write to Firestore</button>
+        <div id="writeResult"></div>
+    </div>
+    
+    <div class="card">
+        <h2>Test Firestore Read</h2>
+        <button id="testRead">Test Read from Firestore</button>
+        <div id="readResult"></div>
+    </div>
+    
+    <div id="logs">
+        <p>Console logs will appear here...</p>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCy-N3WwYTIvbUFGg1qhhb8S-3Eye5FQa0",
+            authDomain: "ngfleet-d675c.firebaseapp.com",
+            projectId: "ngfleet-d675c",
+            storageBucket: "ngfleet-d675c.firebasestorage.app",
+            messagingSenderId: "119274710610",
+            appId: "1:119274710610:web:cba6c4e29628c4746d618b",
+            measurementId: "G-FY161TT086"
+        };
+        
+        // Log function to both console and page
+        function log(message, type = 'info') {
+            console.log(message);
+            const logs = document.getElementById('logs');
+            const p = document.createElement('p');
+            p.classList.add(type);
+            p.textContent = typeof message === 'object' ? JSON.stringify(message) : message;
+            logs.appendChild(p);
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        try {
+            log("Initializing Firebase...");
+            
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            
+            // Initialize Firestore
+            const db = getFirestore(app);
+            
+            // Test init button
+            document.getElementById('testInit').addEventListener('click', () => {
+                try {
+                    log("Firebase app: " + (app ? "Initialized" : "Not initialized"));
+                    log("Firestore: " + (db ? "Initialized" : "Not initialized"));
+                    document.getElementById('initResult').innerHTML = `
+                        <p class="success">Firebase initialized successfully</p>
+                        <pre>${JSON.stringify(firebaseConfig, null, 2)}</pre>
+                    `;
+                } catch (error) {
+                    log("Error testing initialization: " + error.message, 'error');
+                    document.getElementById('initResult').innerHTML = `
+                        <p class="error">Error initializing Firebase: ${error.message}</p>
+                    `;
+                }
+            });
+            
+            // Test write button
+            document.getElementById('testWrite').addEventListener('click', async () => {
+                try {
+                    const testData = {
+                        text: "Test message",
+                        timestamp: new Date(),
+                        test: true
+                    };
+                    
+                    log("Attempting to write to Firestore...");
+                    const docRef = await addDoc(collection(db, "test"), testData);
+                    
+                    log("Document written with ID: " + docRef.id, 'success');
+                    document.getElementById('writeResult').innerHTML = `
+                        <p class="success">Document written successfully with ID: ${docRef.id}</p>
+                        <pre>${JSON.stringify(testData, null, 2)}</pre>
+                    `;
+                } catch (error) {
+                    log("Error writing to Firestore: " + error.message, 'error');
+                    document.getElementById('writeResult').innerHTML = `
+                        <p class="error">Error writing to Firestore: ${error.message}</p>
+                    `;
+                }
+            });
+            
+            // Test read button
+            document.getElementById('testRead').addEventListener('click', async () => {
+                try {
+                    log("Attempting to read from Firestore...");
+                    const querySnapshot = await getDocs(collection(db, "test"));
+                    
+                    const results = [];
+                    querySnapshot.forEach((doc) => {
+                        results.push({
+                            id: doc.id,
+                            data: doc.data()
+                        });
+                    });
+                    
+                    log(`Read ${results.length} documents from Firestore`, 'success');
+                    document.getElementById('readResult').innerHTML = `
+                        <p class="success">Successfully read ${results.length} documents</p>
+                        <pre>${JSON.stringify(results.slice(0, 3), null, 2)}</pre>
+                    `;
+                } catch (error) {
+                    log("Error reading from Firestore: " + error.message, 'error');
+                    document.getElementById('readResult').innerHTML = `
+                        <p class="error">Error reading from Firestore: ${error.message}</p>
+                    `;
+                }
+            });
+            
+            log("Setup complete - ready to test", 'success');
+            
+        } catch (error) {
+            log("Error in script: " + error.message, 'error');
+        }
+    </script>
+</body>
+</html> 

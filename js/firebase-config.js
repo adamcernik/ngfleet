@@ -2,7 +2,7 @@
 
 // Import Firebase modules from CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
@@ -17,17 +17,40 @@ const firebaseConfig = {
     measurementId: "G-FY161TT086"
 };
 
+// Log the initialization process
+console.log('Initializing Firebase with config:', firebaseConfig);
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+console.log('Firebase app initialized:', app);
+
+// Initialize analytics
 const analytics = getAnalytics(app);
 
+// Initialize Firestore
+const db = getFirestore(app);
+console.log('Firestore initialized:', db);
+
 // Initialize Firebase services and export them
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
 // For backward compatibility with non-module scripts
 window.firebaseApp = app;
 window.firebaseAuth = auth;
 window.firebaseDb = db;
-window.firebaseGoogleProvider = googleProvider; 
+window.firebaseCollection = collection;
+window.firebaseAddDoc = addDoc;
+
+// Create a helper function to save registrations
+window.saveToFirebase = async function(data) {
+    try {
+        console.log('saveToFirebase called with data:', data);
+        const docRef = await addDoc(collection(db, "registrations"), data);
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
+}; 
