@@ -253,8 +253,7 @@
         // Check authentication state
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Check if user has admin rights (in production, use Firebase security rules for this)
-                // For demo purposes we'll just check if the user is authenticated
+                // User is signed in - show admin section
                 loginSection.style.display = 'none';
                 adminSection.style.display = 'block';
                 logoutButton.style.display = 'block';
