@@ -17,6 +17,21 @@
             color: #4285f4;
         }
         
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .version {
+            font-size: 0.75rem;
+            color: #777;
+            background-color: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
         .card {
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -67,7 +82,10 @@
     </style>
 </head>
 <body>
-    <h1>Firebase Test Page</h1>
+    <div class="header">
+        <h1>Firebase Test Page</h1>
+        <span class="version">v1.0.0</span>
+    </div>
     
     <div class="card">
         <h2>Firebase Configuration</h2>
