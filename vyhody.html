@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Výhody spolupráce - NG Fleet</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/vyhody.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js" defer></script>
+    <script src="js/firebase-config.js" defer></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">NG Fleet</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="kuryr.html">Kurýr</a></li>
+                    <li><a href="ridic.html">Řidič</a></li>
+                    <li><a href="vyhody.html" class="active">Výhody spolupráce</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="index.html#kontakt">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img/vyhody-bg.jpg');">
+            <div class="container">
+                <h1>Výhody spolupráce s NG Fleet</h1>
+                <p>Zjistěte, proč je výhodné spolupracovat právě s námi</p>
+            </div>
+        </section>
+        
+        <section class="benefits-detail">
+            <div class="container">
+                <h2>Proč si vybrat NG Fleet?</h2>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💰</div>
+                        <div class="benefit-content">
+                            <h3>Výběr režimu poplatků</h3>
+                            <p>U nás máte na výběr - buď 60 Kč denně, nebo 400 Kč týdně. Vyberte si model, který vám více vyhovuje podle četnosti vašich jízd. Žádné skryté poplatky.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🕒</div>
+                        <div class="benefit-content">
+                            <h3>Flexibilní pracovní doba</h3>
+                            <p>Pracujte kdy chcete a kolik chcete. Vy jste svým vlastním pánem - můžete jezdit na plný úvazek nebo si jen přivydělávat ve volném čase.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📝</div>
+                        <div class="benefit-content">
+                            <h3>Volba typu spolupráce</h3>
+                            <p>Nabízíme spolupráci jak na DPP (dohoda o provedení práce), tak na IČO (jako OSVČ). Každá varianta má své výhody - rádi vám poradíme s výběrem té nejvhodnější.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🚗</div>
+                        <div class="benefit-content">
+                            <h3>Půjčovna dopravních prostředků</h3>
+                            <p>Nemáte vlastní dopravní prostředek? Nevadí! Nabízíme půjčení auta, elektrokola nebo koloběžky za výhodných podmínek.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📱</div>
+                        <div class="benefit-content">
+                            <h3>Přístup k více platformám</h3>
+                            <p>Jako náš partner získáte přístup k více přepravním a doručovacím platformám najednou - Wolt, Bolt Food, Uber, Bolt a další.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🛡️</div>
+                        <div class="benefit-content">
+                            <h3>Podpora a zázemí</h3>
+                            <p>Máte problém? Jsme tu pro vás 24/7. Naše zákaznická podpora vám vždy ochotně pomůže s jakýmkoli problémem nebo otázkou.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="rental-section">
+            <div class="container">
+                <h2>Půjčovna dopravních prostředků</h2>
+                <p class="section-intro">Nabízíme půjčení různých typů dopravních prostředků pro vaši práci kurýra nebo řidiče. Vyberte si, co vám nejvíce vyhovuje.</p>
+                
+                <div class="rental-grid">
+                    <div class="rental-card">
+                        <div class="rental-img">
+                            <img src="img/car-rental.jpg" alt="Půjčení auta">
+                        </div>
+                        <div class="rental-info">
+                            <h3>Osobní automobil</h3>
+                            <p>Ideální pro řidiče Uber, Bolt nebo pro kurýry na delší vzdálenosti.</p>
+                            <div class="rental-price">
+                                <span>Od 700 Kč/den</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rental-card">
+                        <div class="rental-img">
+                            <img src="img/e-bike-rental.jpg" alt="Půjčení elektrokola">
+                        </div>
+                        <div class="rental-info">
+                            <h3>Elektrokolo</h3>
+                            <p>Perfektní pro kurýry ve městě - rychlé, ekologické a bez problémů s parkováním.</p>
+                            <div class="rental-price">
+                                <span>Od 300 Kč/den</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rental-card">
+                        <div class="rental-img">
+                            <img src="img/scooter-rental.jpg" alt="Půjčení koloběžky">
+                        </div>
+                        <div class="rental-info">
+                            <h3>Elektrická koloběžka</h3>
+                            <p>Výborná volba pro rychlé doručování v centru města.</p>
+                            <div class="rental-price">
+                                <span>Od 250 Kč/den</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="pricing-section">
+            <div class="container">
+                <h2>Ceník půjčovny</h2>
+                <div class="pricing-table-container">
+                    <table class="pricing-table">
+                        <thead>
+                            <tr>
+                                <th>Časový režim</th>
+                                <th>Auto</th>
+                                <th>Elektrokolo</th>
+                                <th>Koloběžka</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Půlden (6h)</td>
+                                <td>500 Kč</td>
+                                <td>200 Kč</td>
+                                <td>150 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Den (24h)</td>
+                                <td>700 Kč</td>
+                                <td>300 Kč</td>
+                                <td>250 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Víkend</td>
+                                <td>1 300 Kč</td>
+                                <td>500 Kč</td>
+                                <td>400 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Týden</td>
+                                <td>4 000 Kč</td>
+                                <td>1 500 Kč</td>
+                                <td>1 200 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>Měsíc</td>
+                                <td>15 000 Kč</td>
+                                <td>5 000 Kč</td>
+                                <td>4 000 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>3 měsíce</td>
+                                <td>40 000 Kč</td>
+                                <td>13 000 Kč</td>
+                                <td>10 000 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>6 měsíců</td>
+                                <td>75 000 Kč</td>
+                                <td>24 000 Kč</td>
+                                <td>18 000 Kč</td>
+                            </tr>
+                            <tr>
+                                <td>12 měsíců</td>
+                                <td>140 000 Kč</td>
+                                <td>45 000 Kč</td>
+                                <td>32 000 Kč</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="pricing-note">* Ceny jsou uvedeny včetně DPH. Pro dlouhodobější pronájmy nabízíme individuální podmínky.</p>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <div class="container">
+                <h2>Připojte se k nám ještě dnes</h2>
+                <p>Vyberte si, jak chcete spolupracovat</p>
+                <div class="cta-buttons">
+                    <a href="javascript:void(0)" class="btn btn-primary" id="btnKuryrBottom">Chci jezdit jako kurýr</a>
+                    <a href="javascript:void(0)" class="btn btn-secondary" id="btnRidicBottom">Chci jezdit jako řidič</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrační formulář</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="role">Chci jezdit jako:</label>
+                    <select id="role" name="role" required>
+                        <option value="kuryr">Kurýr</option>
+                        <option value="ridic">Řidič</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Jméno:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefon:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">Město:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Zpráva (nepovinné):</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                <button type="button" id="btnVerifyDocs" class="btn btn-primary">Pokračovat k ověření dokladů</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ověření dokladů</h2>
+            <p>Zde bude probíhat ověření dokladů - uživatel bude mít možnost pokračovat na mobilu, kvůli fotoaparátu</p>
+            <button type="button" id="btnContinueToSign" class="btn btn-primary">Pokračovat k podpisu smlouvy</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 NG Fleet. Všechna práva vyhrazena.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Additional script for this page
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnKuryrBottom = document.getElementById('btnKuryrBottom');
+            const btnRidicBottom = document.getElementById('btnRidicBottom');
+            
+            if (btnKuryrBottom) {
+                btnKuryrBottom.addEventListener('click', function() {
+                    const registrationModal = document.getElementById('registrationModal');
+                    const roleSelect = document.getElementById('role');
+                    roleSelect.value = 'kuryr';
+                    registrationModal.style.display = 'block';
+                });
+            }
+            
+            if (btnRidicBottom) {
+                btnRidicBottom.addEventListener('click', function() {
+                    const registrationModal = document.getElementById('registrationModal');
+                    const roleSelect = document.getElementById('role');
+                    roleSelect.value = 'ridic';
+                    registrationModal.style.display = 'block';
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

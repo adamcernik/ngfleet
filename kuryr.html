@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práce pro kurýry - NG Fleet</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js" defer></script>
+    <script src="js/firebase-config.js" defer></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">NG Fleet</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="kuryr.html" class="active">Kurýr</a></li>
+                    <li><a href="ridic.html">Řidič</a></li>
+                    <li><a href="vyhody.html">Výhody spolupráce</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="index.html#kontakt">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img/kuryr-bg.jpg');">
+            <div class="container">
+                <h1>Práce pro kurýry</h1>
+                <p>Doručujte zásilky a jídlo flexibilně s férovými podmínkami pod NG Fleet</p>
+                <div class="cta-buttons">
+                    <a href="javascript:void(0)" class="btn btn-primary" id="btnKuryr">Chci jezdit jako kurýr</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="info-section">
+            <div class="container">
+                <h2>Co nabízíme kurýrům</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>Flexibilní pracovní doba</h3>
+                        <p>Sami si určujete, kdy a kolik budete pracovat. Ideální jako přivýdělek ke studiu nebo hlavnímu zaměstnání.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Volba dopravního prostředku</h3>
+                        <p>Můžete využít vlastní auto, motorku, kolo nebo si půjčit naše elektrokolo či koloběžku.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Stabilní příjem</h3>
+                        <p>Spolupracujeme s největšími doručovacími platformami jako Wolt, Bolt Food a další.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Okamžité platby</h3>
+                        <p>Výplaty na týdenní bázi nebo možnost denních výplat pro maximální flexibilitu.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="steps-section">
+            <div class="container">
+                <h2>Jak začít</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Vyplňte registrační formulář</h3>
+                        <p>Klikněte na tlačítko "Chci jezdit jako kurýr" a vyplňte základní údaje.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Ověření dokladů</h3>
+                        <p>Nahrajte kopii občanského průkazu a případně další dokumenty pro ověření.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Podpis smlouvy</h3>
+                        <p>Elektronicky podepíšete smlouvu o spolupráci.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Začněte doručovat</h3>
+                        <p>Dostanete přístup k aplikacím a můžete začít pracovat.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <div class="container">
+                <h2>Připojte se k nám ještě dnes</h2>
+                <p>Získejte flexibilní práci s férovými podmínkami</p>
+                <a href="javascript:void(0)" class="btn btn-primary" id="btnKuryrBottom">Registrovat se jako kurýr</a>
+            </div>
+        </section>
+    </main>
+    
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrační formulář</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="role">Chci jezdit jako:</label>
+                    <select id="role" name="role" required>
+                        <option value="kuryr" selected>Kurýr</option>
+                        <option value="ridic">Řidič</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Jméno:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefon:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">Město:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Zpráva (nepovinné):</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                <button type="button" id="btnVerifyDocs" class="btn btn-primary">Pokračovat k ověření dokladů</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ověření dokladů</h2>
+            <p>Zde bude probíhat ověření dokladů - uživatel bude mít možnost pokračovat na mobilu, kvůli fotoaparátu</p>
+            <button type="button" id="btnContinueToSign" class="btn btn-primary">Pokračovat k podpisu smlouvy</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 NG Fleet. Všechna práva vyhrazena.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Additional script for this page
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnKuryrBottom = document.getElementById('btnKuryrBottom');
+            if (btnKuryrBottom) {
+                btnKuryrBottom.addEventListener('click', function() {
+                    const registrationModal = document.getElementById('registrationModal');
+                    const roleSelect = document.getElementById('role');
+                    roleSelect.value = 'kuryr';
+                    registrationModal.style.display = 'block';
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NG Fleet - Práce pro kurýry a řidiče</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js" defer></script>
+    <script src="js/firebase-config.js" defer></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">NG Fleet</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="kuryr.html">Kurýr</a></li>
+                    <li><a href="ridic.html">Řidič</a></li>
+                    <li><a href="vyhody.html">Výhody spolupráce</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#kontakt">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Připojte se k NG Fleet</h1>
+                <p>Nabízíme férové podmínky pro kurýry a řidiče na Wolt, Bolt Food, Uber, Bolt a další platformy.</p>
+                <div class="cta-buttons">
+                    <a href="javascript:void(0)" class="btn btn-primary" id="btnKuryr">Chci jezdit jako <strong>kurýr</strong></a>
+                    <a href="javascript:void(0)" class="btn btn-secondary" id="btnRidic">Chci jezdit jako <strong>řidič</strong></a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="benefits">
+            <div class="container">
+                <h2>Výhody spolupráce</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🕒</div>
+                        <h3>Flexibilita</h3>
+                        <p>Pracujte kdy chcete a kolik chcete. Sami si určujete svůj pracovní rozvrh.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">💰</div>
+                        <h3>Výběr režimu poplatků</h3>
+                        <p>Vyberte si co vám vyhovuje - 60 Kč denně nebo 400 Kč týdně.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🚗</div>
+                        <h3>Možnost půjčení vozidla</h3>
+                        <p>Nemáte vlastní dopravní prostředek? Nabízíme půjčení auta, elektrokola nebo koloběžky.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📝</div>
+                        <h3>Práce na DPP nebo IČO</h3>
+                        <p>Možnost zvolit si vhodnou formu spolupráce podle vašich preferencí.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="faq" class="faq">
+            <div class="container">
+                <h2>Často kladené otázky</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <h3>Jak se mohu stát kurýrem/řidičem?</h3>
+                        <p>Vyplňte registrační formulář, nahrajte potřebné doklady a podepište elektronickou smlouvu. Náš tým vás bude kontaktovat s dalšími informacemi.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Jaké doklady potřebuji?</h3>
+                        <p>Budete potřebovat občanský průkaz, řidičský průkaz (pro řidiče) a případně další doklady podle typu práce.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Musím mít vlastní vozidlo?</h3>
+                        <p>Ne, nabízíme možnost půjčení vozidla. Podrobnosti najdete v sekci Výhody spolupráce.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Kolik si mohu vydělat?</h3>
+                        <p>Výdělek závisí na množství odpracovaných hodin a typu práce. Nabízíme konkurenční sazby a férové podmínky.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="kontakt" class="contact">
+            <div class="container">
+                <h2>Kontakt</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <h3>Telefon</h3>
+                        <p><a href="tel:+420123456789">+420 123 456 789</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <h3>E-mail</h3>
+                        <p><a href="mailto:info@ngfleet.cz">info@ngfleet.cz</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💬</div>
+                        <h3>WhatsApp</h3>
+                        <p><a href="https://wa.me/420123456789">Napište nám</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrační formulář</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="role">Chci jezdit jako:</label>
+                    <select id="role" name="role" required>
+                        <option value="kuryr">Kurýr</option>
+                        <option value="ridic">Řidič</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Jméno:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefon:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">Město:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Zpráva (nepovinné):</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                <button type="button" id="btnVerifyDocs" class="btn btn-primary">Pokračovat k ověření dokladů</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ověření dokladů</h2>
+            <p>Zde bude probíhat ověření dokladů - uživatel bude mít možnost pokračovat na mobilu, kvůli fotoaparátu</p>
+            <button type="button" id="btnContinueToSign" class="btn btn-primary">Pokračovat k podpisu smlouvy</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 NG Fleet. Všechna práva vyhrazena.</p>
+        </div>
+    </footer>
+</body>
+</html> 
