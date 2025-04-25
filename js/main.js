@@ -1,6 +1,15 @@
 // Main JavaScript file for NG Fleet Website
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if Firebase is available
+    const isFirebaseAvailable = window.firebaseDb !== undefined;
+    
+    if (isFirebaseAvailable) {
+        console.log('Firebase is connected and ready to use');
+    } else {
+        console.warn('Firebase is not available. Using localStorage for data storage instead.');
+    }
+
     // Modal Elements
     const registrationModal = document.getElementById('registrationModal');
     const verificationModal = document.getElementById('verificationModal');
@@ -106,33 +115,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function saveFormData() {
-        // In a real application, we would save this data to Firebase
-        // For now, just save to localStorage for demonstration
+        // Gather form data
         const formData = {
             role: roleSelect.value,
             name: document.getElementById('name').value,
             phone: document.getElementById('phone').value,
             email: document.getElementById('email').value,
             city: document.getElementById('city').value,
-            message: document.getElementById('message').value
+            message: document.getElementById('message').value,
+            timestamp: new Date().toISOString()
         };
 
+        // Always save to localStorage as backup
         localStorage.setItem('ngFleetRegistration', JSON.stringify(formData));
-        console.log('Form data saved:', formData);
+        console.log('Form data saved to localStorage:', formData);
         
-        // In a real application, we would use Firebase to store this data
-        /*
-        firebase.firestore().collection('registrations').add({
-            ...formData,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-        })
-        .catch((error) => {
-            console.error("Error adding document: ", error);
-        });
-        */
+        // If Firebase is available, save to Firestore
+        if (isFirebaseAvailable) {
+            try {
+                window.firebaseDb.collection('registrations').add({
+                    ...formData,
+                    timestamp: new Date() // Firestore will convert this to a timestamp
+                })
+                .then((docRef) => {
+                    console.log("Document written to Firebase with ID:", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding document to Firebase:", error);
+                });
+            } catch (error) {
+                console.error("Error using Firebase:", error);
+            }
+        }
     }
 
     function redirectToSignature() {
